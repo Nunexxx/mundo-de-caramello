@@ -22,7 +22,14 @@
   var menu = document.querySelector("aside");
   document.addEventListener("click", function (e) {
     var trigger = e.target.closest("button");
-    var open = trigger && (trigger.getAttribute("aria-label") === "Abrir menu" || trigger.textContent.trim() === "Mais");
+    // Login só de navegação: o site é estático, então nada é conferido e nenhuma senha fica nos arquivos.
+    if (trigger && trigger.type === "submit" && trigger.form && trigger.form.querySelector('input[type="password"]')) {
+      e.preventDefault();
+      var email = trigger.form.querySelector('input[type="email"]');
+      location.href = "/mundo-de-caramello/" + (email && /^ana@/i.test(email.value.trim()) ? "colaborador/" : "admin/");
+      return;
+    }
+    var open = trigger &&(trigger.getAttribute("aria-label") === "Abrir menu" || trigger.textContent.trim() === "Mais");
     if (open && menu) { e.preventDefault(); e.stopPropagation(); menu.classList.toggle("hidden"); return; }
     // Grupos do menu continuam recolhendo, mesmo sem o sistema rodando.
     if (trigger && trigger.hasAttribute("aria-expanded")) {
